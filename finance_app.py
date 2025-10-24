@@ -39,11 +39,13 @@ with st.form("transaction_form", clear_on_submit=True):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        # --- FIXED DATE INPUT ---
-        # We use datetime.datetime.now().date() to pull the current system date precisely, 
-        # correcting the one-day error caused by the server's UTC setting.
-        today = datetime.datetime.now().date()
-        date = st.date_input("Date", today)
+        # --- FINAL DATE FIX ---
+        # The server is exactly one day ahead (UTC skew). 
+        # We compensate by subtracting 1 day from the server's "today" date
+        # to align with your local date (October 23rd).
+        server_date_skew = datetime.date.today()
+        corrected_date = server_date_skew - datetime.timedelta(days=1)
+        date = st.date_input("Date", corrected_date)
     
     with col2:
         amount = st.number_input("Amount", min_value=0.01, format="%.2f")

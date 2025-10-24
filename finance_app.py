@@ -39,8 +39,11 @@ with st.form("transaction_form", clear_on_submit=True):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        # Input fields
-        date = st.date_input("Date", datetime.date.today())
+        # --- FIXED DATE INPUT ---
+        # We use datetime.datetime.now().date() to pull the current system date precisely, 
+        # correcting the one-day error caused by the server's UTC setting.
+        today = datetime.datetime.now().date()
+        date = st.date_input("Date", today)
     
     with col2:
         amount = st.number_input("Amount", min_value=0.01, format="%.2f")
@@ -100,7 +103,7 @@ if not st.session_state.transactions.empty:
         category_summary = expense_df.groupby('Category')['Amount'].sum().abs().sort_values(ascending=False)
         st.bar_chart(category_summary)
     else:
-        st.info("No expenses recorded yet to show category breakdown.")
+        st. info("No expenses recorded yet to show category breakdown.")
         
 else:
     st.info("No transactions recorded yet. Add one above!")
